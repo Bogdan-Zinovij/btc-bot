@@ -1,6 +1,10 @@
 {
-  "dependencies": {
-    "node-fetch": "^3.3.2",
-    "node-telegram-bot-api": "^0.64.0"
-  }
+    "type": "module",
+    "scripts": {
+        "start": "node bot"
+    },
+    "dependencies": {
+        "node-fetch": "^3.3.2",
+        "node-telegram-bot-api": "^0.64.0"
+    }
 }

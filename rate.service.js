@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
 const BTC_TO_UAH_URL =
     "https://api.binance.com/api/v3/ticker/price?symbol=BTCUAH";
@@ -33,4 +33,4 @@ class RateService {
     }
 }
 
-module.exports = new RateService();
+export default new RateService();

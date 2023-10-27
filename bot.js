@@ -1,46 +1,43 @@
-const TelegramBot = require("node-telegram-bot-api");
-const rateService = require("./rate.service");
+import TelegramBot from "node-telegram-bot-api";
+import RateService from "./rate.service.js";
 
 const token = "6641079765:AAELgB-TnFqS-USg96ULo1ndVaVJXnBvZnc";
 
 const bot = new TelegramBot(token, { polling: true });
 
-const Commands = {
-    USD: "/get-rate-usd",
-    UAH: "/get-rate-uah",
-};
-
-bot.setMyCommands([
+const COMMANDS = [
     {
-        command: Commands.USD,
-        description: "Get BTC rate in USD currency",
+        command: "/get_rate_usd",
+        description: "Get BTC rate in USD currency.",
     },
     {
-        command: Commands.UAH,
-        description: "Get BTC rate in UAH currency",
+        command: "/get_rate_uah",
+        description: "Get BTC rate in UAH currency.",
     },
-]);
+];
 
-bot.onText(Commands.USD, async (msg) => {
+bot.setMyCommands(COMMANDS);
+
+bot.onText(/\/start/, (msg) => {
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, "Привіт, обери команду та дізнайся курс BTC");
+});
+
+bot.onText(/\/get_rate_usd/, async (msg) => {
     try {
-        const rate = await rateService.getUsdRate();
+        const rate = await RateService.getUsdRate();
+        console.log(rate);
         bot.sendMessage(msg.chat.id, rate);
     } catch (error) {
-        bot.sendMessage(
-            msg.chat.id,
-            "Помилка отримання курсу Bitcoin у доларах."
-        );
+        bot.sendMessage(msg.chat.id, error.message);
     }
 });
 
-bot.onText(Commands.UAH, async (msg) => {
+bot.onText(/\/get_rate_uah/, async (msg) => {
     try {
-        const rate = await rateService.getUahRate();
+        const rate = await RateService.getUahRate();
         bot.sendMessage(msg.chat.id, rate);
     } catch (error) {
-        bot.sendMessage(
-            msg.chat.id,
-            "Помилка отримання курсу Bitcoin у гривнях."
-        );
+        bot.sendMessage(msg.chat.id, "Error");
     }
 });

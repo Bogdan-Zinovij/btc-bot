@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const BTC_TO_UAH_URL =
-    "https://api.binance.com/api/v3/ticker/price?symbol=BTCUAH";
+const NBU_STATS_URL =
+    "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchangenew?json";
 const BTC_TO_USD_URL =
     "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT";
 
@@ -27,15 +27,15 @@ class RateService {
 
     async getUahRate() {
         try {
-            const response = await axios.get(BTC_TO_UAH_URL);
+            const response = await axios.get(NBU_STATS_URL);
             const data = response.data;
 
-            if (!data.price) {
-                throw new Error(
-                    "Unexpected response from the 3rd party service"
-                );
-            }
-            const rate = parseInt(data.price);
+            // if (!data.price) {
+            //     throw new Error(
+            //         "Unexpected response from the 3rd party service"
+            //     );
+            // }
+            const rate = data[0].rate;
             const message = `Current BTC-rate is ${rate} UAH`;
 
             return message;

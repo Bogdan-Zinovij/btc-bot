@@ -7,12 +7,12 @@ const bot = new TelegramBot(token, { polling: true });
 
 const COMMANDS = [
     {
-        command: "/get_rate_usd",
-        description: "Get BTC rate in USD currency.",
+        command: "/get_eur_rate",
+        description: "Дізнатися поточний курс євро",
     },
     {
-        command: "/get_rate_uah",
-        description: "Get BTC rate in UAH currency.",
+        command: "/get_usd_rate",
+        description: "Дізнатися поточний курс долара",
     },
 ];
 
@@ -20,22 +20,24 @@ bot.setMyCommands(COMMANDS);
 
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
-    bot.sendMessage(chatId, "Привіт, обери команду та дізнайся курс BTC");
+    bot.sendMessage(
+        chatId,
+        "Привіт, обери команду та дізнайся курс долара чи євро"
+    );
 });
 
-bot.onText(/\/get_rate_usd/, async (msg) => {
+bot.onText(/\/get_usd_rate/, async (msg) => {
     try {
         const rate = await RateService.getUsdRate();
-        console.log(rate);
         bot.sendMessage(msg.chat.id, rate);
     } catch (error) {
         bot.sendMessage(msg.chat.id, error.message);
     }
 });
 
-bot.onText(/\/get_rate_uah/, async (msg) => {
+bot.onText(/\/get_eur_rate/, async (msg) => {
     try {
-        const rate = await RateService.getUahRate();
+        const rate = await RateService.getEurRate();
         bot.sendMessage(msg.chat.id, rate);
     } catch (error) {
         bot.sendMessage(msg.chat.id, "Error");

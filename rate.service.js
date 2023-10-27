@@ -2,22 +2,15 @@ import axios from "axios";
 
 const NBU_STATS_URL =
     "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchangenew?json";
-const BTC_TO_USD_URL =
-    "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT";
 
 class RateService {
     async getUsdRate() {
         try {
-            const response = await axios.get(BTC_TO_USD_URL);
-            const data = response.data;
-
-            if (!data.price) {
-                throw new Error(
-                    "Unexpected response from the 3rd party service"
-                );
-            }
-            const rate = parseInt(data.price);
-            const message = `Current BTC-rate is ${rate} USD`;
+            const response = await axios.get(NBU_STATS_URL);
+            const dollarCurrency = response.data.find(
+                (currency) => currency.cc === "USD"
+            );
+            const message = `Поточний курс долара USD становить ${dollarCurrency.rate} гривень`;
 
             return message;
         } catch (error) {
@@ -25,18 +18,13 @@ class RateService {
         }
     }
 
-    async getUahRate() {
+    async getEurRate() {
         try {
             const response = await axios.get(NBU_STATS_URL);
-            const data = response.data;
-
-            // if (!data.price) {
-            //     throw new Error(
-            //         "Unexpected response from the 3rd party service"
-            //     );
-            // }
-            const rate = data[0].rate;
-            const message = `Current BTC-rate is ${rate} UAH`;
+            const euroCurrency = response.data.find(
+                (currency) => currency.cc === "EUR"
+            );
+            const message = `Поточний курс євро EUR становить ${euroCurrency.rate} гривень`;
 
             return message;
         } catch (error) {
